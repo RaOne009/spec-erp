@@ -132,3 +132,5 @@ router.get("Timetable/:day", (req, res) => {
       res.send({ msg: "success", arr: response });}
   });
 });
+
+module.exports = router;
