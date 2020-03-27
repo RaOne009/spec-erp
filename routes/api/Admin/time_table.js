@@ -8,129 +8,101 @@ const Table = require('../../models/Table');
 //.@description ->-> Put Timetable
 //.@access ->->Public
 
-router.post("/createTimetable",(req, res) => {
-  newTable = new Table({
-    id: 1,
-    timeTable: [
-      {
-        day: "Monday",
-        slots: [
-          {
-            startTime: "09:00",
-            endTime: "10:00",
-            subject: "a",
-            teacher: "A"
-          },
-          {
-            startTime: "11:00",
-            endTime: "12:00",
-            subject: "b",
-            teacher: "B"
-          }
-        ]
-      },
-      {
-        day: "Tuesday",
-        slots: [
-          {
-            startTime: "09:00",
-            endTime: "10:00",
-            subject: "a",
-            teacher: "A"
-          },
-          {
-            startTime: "11:00",
-            endTime: "12:00",
-            subject: "b",
-            teacher: "B"
-          }
-        ]
-      },
-      {
-        day: "Wednesday",
-        slots: [
-          {
-            startTime: "09:00",
-            endTime: "10:00",
-            subject: "a",
-            teacher: "A"
-          },
-          {
-            startTime: "11:00",
-            endTime: "12:00",
-            subject: "b",
-            teacher: "B"
-          }
-        ]
-      },
-      {
-        day: "Friday",
-        slots: [
-          {
-            startTime: "09:00",
-            endTime: "10:00",
-            subject: "a",
-            teacher: "A"
-          },
-          {
-            startTime: "11:00",
-            endTime: "12:00",
-            subject: "b",
-            teacher: "B"
-          }
-        ]
-      },
-      {
-        day: "Saturday",
-        slots: [
-          {
-            startTime: "09:00",
-            endTime: "10:00",
-            subject: "a",
-            teacher: "A"
-          },
-          {
-            startTime: "11:00",
-            endTime: "12:00",
-            subject: "b",
-            teacher: "B"
-          }
-        ]
-      }
-    ]
-  });
-  newTable.save()
-        .then(notice => res.json(table));
-        .catch(err => res.status(404).json({'msg': "failure"}))
+router.post('/createTimetable', async (req, res) => {
+	const table = new Table({
+    sectionName: req.body.sectionName,
+    timeTable: [{
+    	dayName: req.body.dayName,
+    	slots: [{
+    		subject: req.body.subject,
+    		teacherTeaching: req.body.teacherTeaching,
+    		startTime: req.body.startTime,
+    		endTime: req.body.endTime
+    	}]
+    	}]
+	});
+	try{
+		const saveTable = await table.save()
+		res.json(saveTable);
+	}
+	catch(err){
+		res.json({message: err});
+	}
+});
+
+//.@route ->-> POST api/admin/createTimetable/section 
+//.@description ->-> Put Timetable
+//.@access ->->Public
+
+router.post('createTimetable/:sectionName', async (res, req) => {
+	try{
+		const table = await Table.findById(req.params.sectionName);
+		res.json(table);
+	}
+	catch(err){
+		res.json({message: err});
+	}
 });
 
 //.@route ->-> GET  api/admin/Timetable
 //.@description ->-> View Timetable
 //.@access ->-> Public
 
-router.get("Timetable/", (req, res) => {
-  const id ="1";
-  Table.find({id},(err, doc) => {
-    if (err) res.status(400).json({ msg: "failure" });
-    else res.send({ msg: "success", arr: doc });
-  });
-});
+router.get('/Timetable', async (req, res) => {
+	try{
+		const table = await Table.find();
+		res.json(tables);
+	}
+	catch(err){
+		res.json({message: err});
+	}
+
+})
 
 //.@route ->-> GET  api/admin/Timetable/:day
 //.@description ->-> View Timetable
 //.@access ->-> Public
 
-router.get("Timetable/:day", (req, res) => {
-  const id = "1";
-  const day = req.params.day;
-  Table.find({ id }, (err, doc) => {
-    if (err) res.status(404).json({ msg: "failure" });
-    else {
-      const {timeTable} =  doc[0];
-      // console.log(doc)
-      const response =  timeTable.filter((dayObject) => {return dayObject.day === day });
-      res.send({ msg: "success", arr: response });}
-  });
+router.get('Timetable/:sectionName', async (req, res) => {
+	try{
+		const table = await Table.findById(req.params.sectionName);
+		res.json(table);
+	}
+	catch(err){
+		res.json({message: err});
+	}
 });
 
+//.@route ->-> DELETE api/admin/deleteTimetable
+//.@description ->-> Delete Timetable
+//.@access ->-> Public
+
+
+router.delete('/:sectionName', async (res, req) => {
+	try{
+		const removeSection = await Table.remove({sectionName: req.params.sectionName});
+		res.json(removeSection);
+	}
+	catch(err){
+		res.json({message: err});
+	}
+});
+
+//.@route ->-> POST api/admin/updateTimetable
+//.@description ->-> Update Timetable
+//.@access ->-> Public
+
+
+router.patch('/:sectionName', async (res, req) => {
+	try{
+		const updatedTable = await Table.updateOne(
+			{sectionName: req.params.sectionName},
+			{$set: {timeTable: req.body.timeTable}}
+		);
+		res.json(updatedTable);
+	}
+	catch(err){
+		res.json({message: err});
+	}
+});
 module.exports = router;
