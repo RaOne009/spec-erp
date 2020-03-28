@@ -34,7 +34,7 @@ router.post('/createTimetable', async (req, res) => {
 //.@description ->-> Put Timetable
 //.@access ->->Public
 
-router.post('createTimetable/:sectionName', async (res, req) => {
+router.post('/createTimetable/:sectionName', async (res, req) => {
 	try{
 		const table = await Table.findById(req.params.sectionName);
 		res.json(table);
@@ -54,18 +54,17 @@ router.get('/Timetable', async (req, res) => {
 		res.json(tables);
 	}
 	catch(err){
-		res.json({message: err});
+		res.status(404).json({message: err});
 	}
-
 })
 
 //.@route ->-> GET  api/admin/Timetable/:day
 //.@description ->-> View Timetable
 //.@access ->-> Public
 
-router.get('Timetable/:sectionName', async (req, res) => {
+router.get('/Timetable/:id', async (req, res) => {
 	try{
-		const table = await Table.findById(req.params.sectionName);
+		const table = await Table.findById(req.params.id);
 		res.json(table);
 	}
 	catch(err){
@@ -78,9 +77,9 @@ router.get('Timetable/:sectionName', async (req, res) => {
 //.@access ->-> Public
 
 
-router.delete('/:sectionName', async (res, req) => {
+router.delete('/deleteTimetable/:id', async (res, req) => {
 	try{
-		const removeSection = await Table.remove({sectionName: req.params.sectionName});
+		const removeSection = await Table.remove({_id: req.params.id});
 		res.json(removeSection);
 	}
 	catch(err){
@@ -93,10 +92,10 @@ router.delete('/:sectionName', async (res, req) => {
 //.@access ->-> Public
 
 
-router.patch('/:sectionName', async (res, req) => {
+router.patch('/updateTimetable/:id', async (res, req) => {
 	try{
 		const updatedTable = await Table.updateOne(
-			{sectionName: req.params.sectionName},
+			{_id: req.params.id},
 			{$set: {timeTable: req.body.timeTable}}
 		);
 		res.json(updatedTable);
@@ -105,4 +104,6 @@ router.patch('/:sectionName', async (res, req) => {
 		res.json({message: err});
 	}
 });
+
+
 module.exports = router;
