@@ -1,23 +1,33 @@
-const mongoose = require("mongoose");
+var mongoose = require("mongoose");
 
-const TeacherSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  date: {
-    type: Date,
-    default: Date.now
-  }
+var teacherSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    fatherOrSpouseName: String,
+    address: String,
+    dob: {
+        type: Date,
+        required: true
+    },
+    aadharNumber: String,
+    accountNumber: String,
+    photo: String,
+    email: {
+        type: String,
+        required: true
+    },
+    dateOfJoining: Date,
+    password: {
+        type: String,
+        required: true,
+        minlength: 6
+    },
+    positionOfResponsibility: String,
+    education: String,
+    salary: String,
+    SSSMID: String
 });
 
-module.exports = Teacher = mongoose.model("Teacher", TeacherSchema);
+module.exports = mongoose.model("Teacher", teacherSchema);
