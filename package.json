@@ -23,5 +23,13 @@
   "devDependencies": {
     "concurrently": "^5.1.0",
     "nodemon": "^2.0.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RaOne009/spec-erp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RaOne009/spec-erp/issues"
+  },
+  "homepage": "https://github.com/RaOne009/spec-erp#readme"
 }

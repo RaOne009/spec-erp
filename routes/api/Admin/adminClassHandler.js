@@ -44,11 +44,27 @@ router.post(
           .status(400)
           .json({ errors: [{ msg: "Class already exists" }] });
       }
-      newClass = new Class({
-        name,
-        academicYear,
-        nameInWords,
-        totalStudents
+      newClass = new Class(
+      {
+        name: "5th class",
+        academicYear: "2020 - 2021",
+        nameInWords: "Tony",
+        teachersTeachingInThisClass: [{
+          subject: "eng"
+        },
+        {
+          subject: "maths"
+        },
+        {
+          subject: "hindi"
+        },
+        {
+          subject: "science"
+        },
+        {
+          subject: "compter"
+        }],
+        totalStudents: 15
       });
 
       await newClass.save();
@@ -64,25 +80,22 @@ router.post(
 // @route   GET api/admin/viewClass
 // @desc    Creates a class with express-validator implementation
 // @access  Public
-router.get(
-  "/viewClass",
-  async (req, res) => {
-    try {
-      const queryObject = req.query;
+router.get("/viewClass", async (req, res) => {
+  try {
+    const queryObject = req.query;
 
-      // See if Class Exists
-      let foundClasses = await Class.find(queryObject);
-      if (!foundClasses) {
-        return res.status(400).json({ errors: [{ msg: "No class exists" }] });
-      }
-
-      return res.json({ classes: foundClasses });
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server error");
+    // See if Class Exists
+    let foundClasses = await Class.find(queryObject);
+    if (!foundClasses) {
+      return res.status(400).json({ errors: [{ msg: "No class exists" }] });
     }
+
+    return res.json({ classes: foundClasses });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
-);
+});
 
 // @route   GET api/admin/viewClass/:id
 // @desc    Creates a class with express-validator implementation
@@ -182,3 +195,5 @@ router.delete(
     }
   }
 );
+
+module.exports = router;
